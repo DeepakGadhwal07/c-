@@ -1,0 +1,54 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+
+bool isLeapYear(int year) {
+    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+}
+
+
+int getDaysInMonth(int month, int year) {
+    if (month == 4 || month == 6 || month == 9 || month == 11) return 30;
+    if (month == 2) return isLeapYear(year) ? 29 : 28;
+    return 31;
+}
+
+
+void printMonthCalendar(int days, int& startDay) {
+    cout << "Sun Mon Tue Wed Thu Fri Sat\n";
+    for (int i = 0; i < startDay; ++i) cout << "    ";
+    for (int day = 1; day <= days; ++day) {
+        cout << setw(3) << day << " ";
+        if (++startDay > 6) {
+            startDay = 0;
+            cout << endl;
+        }
+    }
+    if (startDay != 0) cout << endl;
+}
+
+
+void printCalendar(int year) {
+    const string months[] = { "January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December" };
+    int startDay = 1; 
+
+    for (int y = 1900; y < year; ++y) {
+        startDay = (startDay + (isLeapYear(y) ? 366 : 365)) % 7;
+    }
+
+    for (int month = 0; month < 12; ++month) {
+        cout << "\n  ------------ " << months[month] << " " << year << " ------------\n";
+        int daysInMonth = getDaysInMonth(month + 1, year);
+        printMonthCalendar(daysInMonth, startDay);
+    }
+}
+
+int main() {
+    int year;
+    cout << "Enter year: ";
+    cin >> year;
+    printCalendar(year);
+    return 0;
+}
